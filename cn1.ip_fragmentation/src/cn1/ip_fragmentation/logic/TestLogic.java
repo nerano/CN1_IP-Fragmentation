@@ -42,7 +42,7 @@ public class TestLogic {
 				+ " and 15 words = 60 bytes. The input should be in words!): ");
 		length = reader.readLine();
 		if(Integer.parseInt(length) < 5 || Integer.parseInt(length) > 15) {
-			throw new IllegalArgumentException("Wrong input! The input value has to be between 5 and 20!");
+			throw new IllegalArgumentException("Wrong input! The input value has to be between 5 and 15!");
 		} else {
 			this.headerLength = Integer.parseInt(length)*32/8;
 		}
