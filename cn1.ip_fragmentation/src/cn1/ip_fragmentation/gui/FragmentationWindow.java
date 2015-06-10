@@ -99,13 +99,13 @@ public class FragmentationWindow {
 							headerLength = 20;
 							frameUpdate();
 						} else {
-							if(Integer.parseInt(headerInput.getText()) < 5 || Integer.parseInt(headerInput.getText()) > 15) {
+							if(Integer.parseInt(headerInput.getText()) < 20 || Integer.parseInt(headerInput.getText()) > 60) {
 								JOptionPane.showMessageDialog(null, "The input value for \"Header length\" "
-										+ "has to be bewteen 5 and 15 words!");
+										+ "has to be bewteen 20 and 60 bytes!");
 							} else {
 								packageLength = Integer.valueOf(packageInput.getText());
 								frameLength = Integer.valueOf(frameInput.getText());
-								headerLength = (Integer.valueOf(headerInput.getText()) * 32) / 8;
+								headerLength = (Integer.valueOf(headerInput.getText()));
 								frameUpdate();
 							}
 						}
@@ -136,12 +136,10 @@ public class FragmentationWindow {
 		// Visualisierung; falls nein: füge neue Visulaisierung per 'Screen' hinzu.
 		if (this.cp.getComponents().length >= 2) {
 			this.cp.remove(1);
-			System.out.println(this.cp.getComponents().length);
 			this.cp.add(new JPanel(), BorderLayout.CENTER);
 			this.cp.validate();
-			System.out.println(this.cp.getComponents().length);
 			this.cp.remove(1);
-			System.out.println(this.cp.getComponents().length);
+			this.cp.setBackground(Color.WHITE);
 			this.cp.validate();
 		}
 		this.fragmentationPanel = new Screen(this.packageLength, this.frameLength, this.headerLength);
