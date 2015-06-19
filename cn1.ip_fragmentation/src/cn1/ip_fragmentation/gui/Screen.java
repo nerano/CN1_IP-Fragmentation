@@ -2,9 +2,11 @@ package cn1.ip_fragmentation.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,12 +42,8 @@ public class Screen extends JPanel {
 		repaint();
 	}
 
-	/** 
-	 * Methode wird in einer Endlosscheife immer wieder aufgerufen und zeichnet die Rechtecke für die,
-	 * durch die Logik errechnete, Visualisierung. Dies geschieht per 'drawRect()', die Beschriftung wird per
-	 * 'drawString()' eingefügt.
-	 */
-	public void paint(Graphics g) {
+	// Better to override this instead of paint(...)
+	public void paintComponent(Graphics g) {
 		FontMetrics metrics;
 		
 		int xPosition = 50;
@@ -59,6 +57,12 @@ public class Screen extends JPanel {
 		
 		Graphics2D g2 = (Graphics2D) g;		
 		g2.setColor(Color.BLACK);
+		
+		// Packet without fragmentation
+		g2.drawString("Original Packet", xPosition, yPosition);
+		
+		yPosition = yPosition + 10;
+		
 		g2.drawRect(xPosition, yPosition, packageWidth, packageHeight);
 		for (int i = 0; i < fields.length; i++) {
 			if (i == fields.length-1) {
@@ -72,15 +76,18 @@ public class Screen extends JPanel {
 				g2.drawLine(xPosition, yPosition, xPosition, yPosition+40);
 			}
 		}
-		
+			
+		// Fragmented Packets
 		for (int i = 0; i < this.fragmentation.size(); i++) {
 			String [] values = {this.fragmentation.get(i).get("length"), this.headerLength.toString(),
 					this.fragmentation.get(i).get("ID"), this.fragmentation.get(i).get("MF"),
 					this.fragmentation.get(i).get("offset")};
 			xPosition = 50;
 			if (i == 0) {
-				yPosition += 125;
+				yPosition += 90;
 				stringPosition = yPosition + 25;
+				
+				g2.drawString("Fragmented Packets", xPosition, yPosition - 10);
 			} else {
 				yPosition += 65;
 				stringPosition = yPosition + 25;
@@ -96,9 +103,14 @@ public class Screen extends JPanel {
 			}
 			xPosition += 3;
 			g2.drawString(fields[5], xPosition, stringPosition);
-			
-			this.validate();
 		}
+		
+		
+		// "Calculate" the height of the window, required for the JScrollPane to work correctly
+		this.setPreferredSize(new Dimension(800, yPosition + packageHeight + 10));
+		
+		this.validate();
 	}
+		
 }
 

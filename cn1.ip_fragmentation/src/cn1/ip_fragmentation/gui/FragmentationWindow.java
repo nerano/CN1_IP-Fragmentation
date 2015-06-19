@@ -3,19 +3,27 @@ package cn1.ip_fragmentation.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
+
+import com.sun.xml.internal.ws.api.Component;
 
 import cn1.ip_fragmentation.gui.Screen;
 
@@ -51,32 +59,54 @@ public class FragmentationWindow {
 	public FragmentationWindow(JFrame window) {
 		this.window = window;
 		this.cp = this.window.getContentPane();
+			
+		// Check if root window has been resized so we can adjust the size of our ScrollPane
+		window.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				// Check if we already initialized our ScrollPane
+				if (scrollPane != null) {
+	                scrollPane.revalidate();
+	                scrollPane.repaint();
+                }
+            }
+		});
+		
 		this.buildFrame();
 	}
 
 	private void buildFrame() {
 		
 		// setze Layout und baue das Panel für die Eingabe auf.
-		cp.setBackground(Color.WHITE);
 		cp.setLayout(new BorderLayout());
+		panelNorth.setBackground(Color.WHITE);
 		this.panelNorth.setLayout(new GridLayout(1, 7));
 		this.panelNorth.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
-		this.packageLabel.setText("Package length:");
+		
+		// Packet length label & input
+		this.packageLabel.setText("Packet length:");
 		this.panelNorth.add(this.packageLabel);
 		this.panelNorth.add(this.packageInput);
-		this.frameLabel.setText("Frame length:");
+		
+		// Frame length label & input
+		this.frameLabel.setText("Fragment length:");
 		this.panelNorth.add(this.frameLabel);
 		this.panelNorth.add(this.frameInput);
+		
+		// Header length label & input
 		this.headerLabel.setText("Header length:");
 		this.panelNorth.add(this.headerLabel);
 		this.panelNorth.add(this.headerInput);
 		this.panelNorth.add(this.fragmentButton);
 		
+		// Default values
+		packageInput.setText("1024");
+		frameInput.setText("128");
+		headerInput.setText("5");
+		
 		// ActionListener für das Drücken des Buttons 'Fragmentation'.
 		// Die Eingaben werden überprüft und in die Variablen geschrieben.
 		this.fragmentButton.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (packageInput.getText().equals("")) {
 					if (frameInput.getText().equals("")) {
@@ -131,28 +161,22 @@ public class FragmentationWindow {
 	 * gedrückt wird.
 	 */
 	private void frameUpdate() {
-		// Überprüft, ob sich bereits eine Visulaisierung auf dem Panel befindet, wenn ja:
-		// entferne diese Visualisierung und ersetzte sie durch ein leeres Panel und später durch die neue
-		// Visualisierung; falls nein: füge neue Visulaisierung per 'Screen' hinzu.
-		if (this.cp.getComponents().length >= 2) {
-			this.cp.remove(1);
-			System.out.println(this.cp.getComponents().length);
-			this.cp.add(new JPanel(), BorderLayout.CENTER);
-			this.cp.validate();
-			System.out.println(this.cp.getComponents().length);
-			this.cp.remove(1);
-			System.out.println(this.cp.getComponents().length);
-			this.cp.validate();
-		}
-		this.fragmentationPanel = new Screen(this.packageLength, this.frameLength, this.headerLength);
-		this.fragmentationPanel.setLayout(new BorderLayout());
+		// Create new packet visualization
+		fragmentationPanel = new Screen(this.packageLength, this.frameLength, this.headerLength);
 		
-		// TODO: ScrollPane bzw. ScrollBar funktioniert noch nicht!!!
-		this.scrollPane = new JScrollPane(this.fragmentationPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		this.cp.add(this.scrollPane, BorderLayout.CENTER);
-		this.cp.add(this.fragmentationPanel, BorderLayout.CENTER);
+		// Add panel to ScrollPane
+		this.scrollPane = new JScrollPane(this.fragmentationPanel);
+		scrollPane.setBackground(Color.WHITE);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		// Needed to fix a bug that appears while scrolling
+		scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		
+		// Add ScrollPane to the main window
+		this.cp.add(scrollPane);
+
 		this.cp.validate();
-		//this.cp.add(this.scrollPane, BorderLayout.CENTER);
+		this.cp.repaint();
 	}
 }

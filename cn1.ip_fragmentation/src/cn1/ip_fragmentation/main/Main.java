@@ -14,10 +14,11 @@ public class Main {
 
 	public static void main(String[] args) {
 		final JFrame frame = new JFrame("IP Fragmentation");
+		
 		frame.setResizable(true);
+		frame.setSize(850, 400);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		new FragmentationWindow(frame);
 		frame.setVisible(true);
-		frame.setSize(850, 400);
 	}
 }
