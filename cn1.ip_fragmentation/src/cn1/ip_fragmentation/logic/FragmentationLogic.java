@@ -84,7 +84,7 @@ public class FragmentationLogic {
 			} else {
 				map.put("offset", "0");
 			}
-			map.put("padding", paddingBytes.toString());
+			//map.put("padding", paddingBytes.toString());
 			
 			list.add(map);
 			totalProcessed += frameLength-headerLength;

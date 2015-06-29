@@ -3,7 +3,6 @@ package cn1.ip_fragmentation.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,19 +10,14 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
-import javax.swing.ScrollPaneConstants;
-
-import com.sun.xml.internal.ws.api.Component;
 
 import cn1.ip_fragmentation.gui.Screen;
 
@@ -101,7 +95,7 @@ public class FragmentationWindow {
 		// Default values
 		packageInput.setText("1024");
 		frameInput.setText("128");
-		headerInput.setText("5");
+		headerInput.setText("20");
 		
 		// ActionListener für das Drücken des Buttons 'Fragmentation'.
 		// Die Eingaben werden überprüft und in die Variablen geschrieben.
@@ -129,13 +123,13 @@ public class FragmentationWindow {
 							headerLength = 20;
 							frameUpdate();
 						} else {
-							if(Integer.parseInt(headerInput.getText()) < 5 || Integer.parseInt(headerInput.getText()) > 15) {
+							if(Integer.parseInt(headerInput.getText()) < 20 || Integer.parseInt(headerInput.getText()) > 60) {
 								JOptionPane.showMessageDialog(null, "The input value for \"Header length\" "
-										+ "has to be bewteen 5 and 15 words!");
+										+ "has to be bewteen 20 and 60 bytes!");
 							} else {
 								packageLength = Integer.valueOf(packageInput.getText());
 								frameLength = Integer.valueOf(frameInput.getText());
-								headerLength = (Integer.valueOf(headerInput.getText()) * 32) / 8;
+								headerLength = (Integer.valueOf(headerInput.getText()));
 								frameUpdate();
 							}
 						}

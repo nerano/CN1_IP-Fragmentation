@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,9 +35,9 @@ public class Screen extends JPanel {
 	public Screen(int packageLength, int frameLength, int headerLength) {
 		this.setLayout(new BorderLayout());
 		this.packageLength = packageLength;
-		this.headerLength = headerLength;
 		this.fragmentation = 
 				FragmentationLogic.calculate(packageLength, frameLength, headerLength, this.identifier.toString());
+		this.headerLength = Integer.parseInt(fragmentation.get(0).get("header"));
 		repaint();
 	}
 
