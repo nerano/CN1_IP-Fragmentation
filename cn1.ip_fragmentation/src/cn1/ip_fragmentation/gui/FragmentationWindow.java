@@ -155,6 +155,11 @@ public class FragmentationWindow {
 	 * gedrückt wird.
 	 */
 	private void frameUpdate() {
+		// if ScrollPane already exists, remove it and add a new one
+		if (scrollPane != null) {
+		     this.cp.remove(scrollPane);
+		}
+		
 		// Create new packet visualization
 		fragmentationPanel = new Screen(this.packageLength, this.frameLength, this.headerLength);
 		
